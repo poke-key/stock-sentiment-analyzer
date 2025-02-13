@@ -41,6 +41,7 @@ const Dashboard = () => {
             <div className="flex items-center space-x-2 mb-4">
               <Search className="text-gray-400" />
               <input 
+                style={{color: 'white'}}
                 type="text"
                 placeholder="Enter stock symbol..."
                 className="w-full p-2 border rounded"
