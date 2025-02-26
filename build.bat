@@ -28,7 +28,9 @@ call npm run build || echo Failed to build frontend && goto error
 REM Run the backend, which will deploy frontend
 echo Starting backend
 cd ..
-call python -m fastapi dev backend/main.py || echo Failed to start backend && goto error
+
+REM "dev" makes it auto-reload. use "run" for actual server.
+start python -m fastapi dev backend/main.py || echo Failed to start backend && goto error
 
 :error
 REM Deactivate senv if it exists
