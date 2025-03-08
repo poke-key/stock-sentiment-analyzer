@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from config import config
 
 app = FastAPI()
+
+# print("Database URL: " + config.database_url)
+# print("Stock API Key: " + config.stock_api_key)
 
 # API Routes go here
 @app.get("/api/hello")
