@@ -1,4 +1,5 @@
 
 backend/senv/
 backend/__pycache__/
+backend/.env
 senv
