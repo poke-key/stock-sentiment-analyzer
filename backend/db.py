@@ -9,18 +9,16 @@ SQLModel.metadata.create_all(engine)
 # AddUser(username, password)
 # GetUser(username)
 
-def get_session():
-    with Session(engine) as session:
-        yield session
-
 class DatabaseClient:
 
-	def AddUser(self, username, password, session: Session = Depends(get_session)):
-		new_user = User(name = username, password = password)
-		session.add(new_user)
-		session.commit()
+	def AddUser(self, username, password):
+		with Session(engine) as session:
+			new_user = User(username = username, password = password)
+			session.add(new_user)
+			session.commit()
 
-	def GetUser(self, username, session: Session = Depends(get_session)):
-		statement = select(User).where(User.username == username)
-		user = session.exec(statement).first()
-		return user
+	def GetUser(self, username):
+		with Session(engine) as session:
+			statement = select(User).where(User.username == username)
+			user = session.exec(statement).first()
+			return user
