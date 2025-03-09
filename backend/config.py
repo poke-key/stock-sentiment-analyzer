@@ -18,6 +18,11 @@ class Config:
     def stock_api_key(self):
         return os.getenv("STOCK_API_KEY")
 
+    # Another cheap way of limiting random people signing up
+    @property
+    def signup_pass(self):
+        return os.getenv("SIGNUP_PASS")
+
 
 # Singleton instance
 config = Config()
