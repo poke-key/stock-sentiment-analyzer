@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Search, Bell, BookMarked, Settings, Link } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import { useNavigate } from 'react-router';
 
 const Login = () => {
 	
@@ -25,7 +26,8 @@ const Login = () => {
 			const data = await response.json();
 			// TODO(Darrell): VERIFY VALIDITY HERE (STORE SESSION TOKEN)
 			console.log(data)
-			sessionStorage.setItem("sesh", data.session)
+			sessionStorage.setItem("session", data.session)
+			useNavigate().useNavigate("/dashboard")
 		  } 
 		  catch (error) {
 			console.error("Error:", error);

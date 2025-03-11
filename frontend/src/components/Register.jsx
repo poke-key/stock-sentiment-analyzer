@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Search, Bell, BookMarked, Settings } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import { useNavigate } from 'react-router';
 
 const Register = () => {
 	
@@ -29,6 +30,8 @@ const Register = () => {
 			const data = await response.json();
 			// TODO(Darrell): VERIFY VALIDITY HERE (Popup for success?)
 			console.log(data)
+			alert("Registration Successfull!\nYou can log in now!")
+			useNavigate().useNavigate("/login")
 		  } 
 		  catch (error) {
 			console.error("Error:", error);

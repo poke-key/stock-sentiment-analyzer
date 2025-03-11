@@ -2,8 +2,10 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from config import config
 from db import DatabaseClient, GetSessionValid
+from starlette.responses import FileResponse
 import uuid
 import time
+import os
 
 app = FastAPI()
 
@@ -55,6 +57,14 @@ async def login(username: str, password: str):
         session.refresh(user)
         return {"session" : user.session}
 
-
 # Do NOT put API routes after this line!
-app.mount("/", StaticFiles(directory="frontend/dist", html=True), name="frontend")
+app.mount("/static", StaticFiles(directory="frontend/dist", html=True), name="static")
+
+# Serve the React index.html for all other routes
+# For client-side routing
+@app.get("/{full_path:path}")  # Catch all paths
+async def catch_all(full_path: str):
+    index_path = "frontend/dist/index.html"
+    if os.path.exists(index_path):
+        return FileResponse(index_path)  # Serve React app
+    return {"error": "index.html not found"}
