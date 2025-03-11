@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Search, Bell, BookMarked, Settings } from 'lucide-react';
+import { Search, Bell, BookMarked, Settings, Microchip } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card";
+import Dropdown from './ui/dropdown.jsx';
+import { techStockOptions } from '../data/stocks.jsx'
 
 const Dashboard = () => {
   const [selectedStock, setSelectedStock] = useState(null);
@@ -23,17 +25,18 @@ const Dashboard = () => {
   }, [selectedStock]);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="w-screen h-screen bg-gray-100 flex flex-col gap-4 grid grid-cols-1">
+      
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-8 flex flex-col justify-center text-center">
         <h1 className="text-3xl font-bold text-gray-800">Stock Sentiment Analyzer</h1>
         <p className="text-gray-600">Real-time market sentiment analysis dashboard</p>
       </div>
 
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {/* Search Stocks and Graph */}
+      <div className="flex justify-center justify-items-center gap-4">
         {/* Search and Groups Panel */}
-        <Card className="lg:col-span-1">
+        <Card className="">
           <CardHeader>
             <CardTitle>Search Stocks</CardTitle>
           </CardHeader>
@@ -41,87 +44,81 @@ const Dashboard = () => {
             <div className="flex items-center space-x-2 mb-4">
               <Search className="text-gray-400" />
               <input 
-                style={{color: 'white'}}
                 type="text"
                 placeholder="Enter stock symbol..."
-                className="w-full p-2 border rounded"
+                className="w-64 p-2 border rounded bg-gray-200 text-gray-800"
               />
             </div>
-            <div className="mt-4">
-              <h3 className="font-semibold mb-2">Saved Groups</h3>
-              <div className="space-y-2">
-                <button className="w-full p-2 text-left bg-blue-50 rounded hover:bg-blue-100">
-                  Tech Stocks
-                </button>
-                <button className="w-full p-2 text-left bg-blue-50 rounded hover:bg-blue-100">
+            <div className="flex items-center space-x-2 mb-4">
+            <Microchip className="text-gray-400 mt-2" />
+            <Dropdown placeholder='Tech Stocks' options={techStockOptions} className='w-64' />
+                {/* <button className="w-full p-2 text-left bg-blue-50 rounded hover:bg-blue-100">
                   Energy Sector
-                </button>
-              </div>
+                </button> */}
             </div>
+            
           </CardContent>
         </Card>
 
         {/* Main Chart */}
-        <Card className="lg:col-span-2">
+        <Card>
           <CardHeader>
             <CardTitle>Sentiment Analysis</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={sentimentData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis yAxisId="left" />
-                  <YAxis yAxisId="right" orientation="right" />
-                  <Tooltip />
-                  <Legend />
-                  <Line 
-                    yAxisId="left"
-                    type="monotone" 
-                    dataKey="price" 
-                    stroke="#2196F3" 
-                    name="Stock Price"
-                  />
-                  <Line 
-                    yAxisId="right"
-                    type="monotone" 
-                    dataKey="sentiment" 
-                    stroke="#4CAF50" 
-                    name="Sentiment Score"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Sentiment Stats */}
-        <Card className="lg:col-span-3">
-          <CardHeader>
-            <CardTitle>Market Sentiment Overview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-green-50 rounded">
-                <h3 className="font-semibold">Social Media Sentiment</h3>
-                <p className="text-2xl">0.82</p>
-                <p className="text-sm text-gray-600">Positive trend</p>
-              </div>
-              <div className="p-4 bg-blue-50 rounded">
-                <h3 className="font-semibold">News Sentiment</h3>
-                <p className="text-2xl">0.75</p>
-                <p className="text-sm text-gray-600">Neutral trend</p>
-              </div>
-              <div className="p-4 bg-purple-50 rounded">
-                <h3 className="font-semibold">Overall Score</h3>
-                <p className="text-2xl">0.78</p>
-                <p className="text-sm text-gray-600">Bullish signal</p>
-              </div>
-            </div>
+          <LineChart data={sentimentData} width={600} height={300}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis yAxisId="left" />
+              <YAxis yAxisId="right" orientation="right" />
+              <Tooltip />
+              <Legend />
+              <Line 
+                yAxisId="left"
+                type="monotone" 
+                dataKey="price" 
+                stroke="#2196F3" 
+                name="Stock Price"
+              />
+              <Line 
+                yAxisId="right"
+                type="monotone" 
+                dataKey="sentiment" 
+                stroke="#4CAF50" 
+                name="Sentiment Score"
+              />
+            </LineChart>
           </CardContent>
         </Card>
       </div>
+
+        {/* Sentiment Stats */}
+        <div className='flex justify-center justify-items-center gap-4 max-h-fit'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Market Sentiment Overview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-4 bg-green-50 rounded">
+                  <h3 className="font-semibold">Social Media Sentiment</h3>
+                  <p className="text-2xl">0.82</p>
+                  <p className="text-sm text-gray-600">Positive trend</p>
+                </div>
+                <div className="p-4 bg-blue-50 rounded">
+                  <h3 className="font-semibold">News Sentiment</h3>
+                  <p className="text-2xl">0.75</p>
+                  <p className="text-sm text-gray-600">Neutral trend</p>
+                </div>
+                <div className="p-4 bg-purple-50 rounded">
+                  <h3 className="font-semibold">Overall Score</h3>
+                  <p className="text-2xl">0.78</p>
+                  <p className="text-sm text-gray-600">Bullish signal</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
     </div>
   );
 };
