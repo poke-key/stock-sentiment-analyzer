@@ -9,10 +9,12 @@ const Register = () => {
 	const [username, setUsername] = useState("");
   	const [password, setPassword] = useState("");
   	const [registerCode, setRegisterCode] = useState("");
+	let navigate = useNavigate();
 
 	  const handleSubmit = async (e) => {
 		try {
-			const response = await fetch("http://localhost:8000/api/login", {
+			e.preventDefault();
+			const response = await fetch("http://localhost:8000/api/register", {
 			  method: "POST",
 			  headers: {
 				"Content-Type": "application/json",
@@ -20,18 +22,18 @@ const Register = () => {
 			  body: JSON.stringify({ 
 				username: username, 
 				password: password, 
-				signup_pass: registerCode }),
+				signupcode: registerCode }),
 			});
 		
 			if (!response.ok) {
-			  throw new Error("Login failed");
+			  throw new Error("Register failed");
 			}
 		
 			const data = await response.json();
 			// TODO(Darrell): VERIFY VALIDITY HERE (Popup for success?)
 			console.log(data)
 			alert("Registration Successfull!\nYou can log in now!")
-			useNavigate().useNavigate("/login")
+			navigate("/login")
 		  } 
 		  catch (error) {
 			console.error("Error:", error);

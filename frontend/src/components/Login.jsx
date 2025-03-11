@@ -8,9 +8,11 @@ const Login = () => {
 	
 	const [username, setUsername] = useState("");
   	const [password, setPassword] = useState("");
+	let navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		try {
+			e.preventDefault();
 			const response = await fetch("http://localhost:8000/api/login", {
 			  method: "POST",
 			  headers: {
@@ -27,7 +29,7 @@ const Login = () => {
 			// TODO(Darrell): VERIFY VALIDITY HERE (STORE SESSION TOKEN)
 			console.log(data)
 			sessionStorage.setItem("session", data.session)
-			useNavigate().useNavigate("/dashboard")
+			navigate("/dashboard")
 		  } 
 		  catch (error) {
 			console.error("Error:", error);

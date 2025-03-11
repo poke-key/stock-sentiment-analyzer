@@ -1,13 +1,39 @@
 from fastapi import FastAPI, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from config import config
-from db import DatabaseClient, GetSessionValid
+from db import DatabaseClient, GetSessionValid, engine
 from starlette.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from sqlmodel import Field, Session, SQLModel, create_engine, select
+from pydantic import BaseModel
 import uuid
 import time
 import os
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+    signupcode: str
+
 app = FastAPI()
+
+# Allow traffic from different origifns
+origins = [
+    "http://127.0.0.1",
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # print("Database URL: " + config.database_url)
 # print("Stock API Key: " + config.stock_api_key)
@@ -24,30 +50,30 @@ db = DatabaseClient()
 #     user = db.GetUser(username="testname")
 #     print(user)
 
-
-
 # API Routes go here
 @app.get("/api/hello")
 async def root():
     return {"message": "Hello World"}
 
-@app.post("/api/signup", status_code=status.HTTP_201_CREATED)
-async def request_new_account(username: str, password: str, signup_pass: str):
-    if signup_pass != config.signup_pass:
+@app.post("/api/register", status_code=status.HTTP_201_CREATED)
+async def request_new_account(request: RegisterRequest):
+    if request.signupcode != config.signup_pass:
+        print("register: signup code invalid")
         raise HTTPException(status_code=401, detail="signup code invalid")
-    user = db.GetUser(username)
+    user = db.GetUser(request.username)
     if user:
+        print("register: user already exists")
         raise HTTPException(status_code=401, detail="user already exists with that name")
-    db.AddUser(username, password)
+    db.AddUser(request.username, request.password)
     return {"message" : "OK"}
 
 @app.post("/api/login", status_code=status.HTTP_200_OK)
-async def login(username: str, password: str):
+async def login(request: LoginRequest):
     with Session(engine) as session:
-        user = db.GetUser(username)
+        user = db.GetUser(request.username)
         if not user:
             raise HTTPException(status_code=401, detail="user doesn't exist")
-        if user.password != password:
+        if user.password != request.password:
             raise HTTPException(status_code=401, detail="invalid login credentials")
         # Generate session token for use now.
         user.session = uuid.uuid4()
