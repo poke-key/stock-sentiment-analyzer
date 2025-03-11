@@ -8,7 +8,10 @@ import { techStockOptions } from '../data/stocks.jsx'
 const Dashboard = () => {
   const [selectedStock, setSelectedStock] = useState(null);
   const [sentimentData, setSentimentData] = useState([]);
-  const [savedGroups, setSavedGroups] = useState([]);
+
+  const handleDropdownChange = (selectedOption) => {
+    setSelectedStock(selectedOption.value);
+  };
   
   // Mock data - replace with actual API calls
   const mockSentimentData = [
@@ -51,7 +54,8 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center space-x-2 mb-4">
             <Microchip className="text-gray-400 mt-2" />
-            <Dropdown placeholder='Tech Stocks' options={techStockOptions} className='w-64' />
+            <Dropdown placeholder='Tech Stocks' options={techStockOptions} className='w-64' 
+                      onChange={handleDropdownChange}/>
                 {/* <button className="w-full p-2 text-left bg-blue-50 rounded hover:bg-blue-100">
                   Energy Sector
                 </button> */}

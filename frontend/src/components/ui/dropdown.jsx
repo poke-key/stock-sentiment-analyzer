@@ -17,6 +17,7 @@ const CustomValueContainer = ({ children, ...props }) => {
 };
 
 export default class Dropdown extends Component {
+
   render() {
     return (
       <Select
@@ -26,6 +27,7 @@ export default class Dropdown extends Component {
         isClearable
         options={this.props.options}
         placeholder={this.props.placeholder}
+        onChange = {value => this.props.onChange(value)}
         components={{
           ValueContainer: CustomValueContainer
         }}
