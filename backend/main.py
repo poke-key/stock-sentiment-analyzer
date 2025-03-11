@@ -39,7 +39,7 @@ async def request_new_account(username: str, password: str, signup_pass: str):
     db.AddUser(username, password)
     return {"message" : "OK"}
 
-@app.get("/api/login", status_code=status.HTTP_200_OK)
+@app.post("/api/login", status_code=status.HTTP_200_OK)
 async def login(username: str, password: str):
     with Session(engine) as session:
         user = db.GetUser(username)
