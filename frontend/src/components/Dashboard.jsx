@@ -59,7 +59,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
           {/* Search */}
-          <Card className="w-fit h-full sm:place-self-center lg:place-self-end">
+          <Card className="w-full h-full sm:place-self-center lg:place-self-end">
             <CardHeader>
               <CardTitle>Search Stocks</CardTitle>
             </CardHeader>
@@ -69,7 +69,7 @@ const Dashboard = () => {
                 <input 
                   type="text"
                   placeholder="Enter stock ticker..."
-                  className="w-64 p-2 border rounded bg-gray-200 text-gray-800"
+                  className="w-full p-2 border rounded bg-gray-200 text-gray-800"
                   onChange={manualStockInputChanged}
                 />
                 <button 
@@ -122,36 +122,36 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
-          </div>
+        </div>
       </div>
 
-        {/* Sentiment Stats */}
-        <div className='flex justify-center justify-items-center gap-4 max-h-screen max-w-full'>
-          <Card>
-            <CardHeader>
-              <CardTitle>Market Sentiment Overview</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="py-4 px-16 bg-green-50 rounded">
-                  <h3 className="font-semibold">Social Media Sentiment</h3>
-                  <p className="text-2xl">0.82</p>
-                  <p className="text-sm text-gray-600">Positive trend</p>
-                </div>
-                <div className="py-4 px-16 bg-blue-50 rounded">
-                  <h3 className="font-semibold">News Sentiment</h3>
-                  <p className="text-2xl">0.75</p>
-                  <p className="text-sm text-gray-600">Neutral trend</p>
-                </div>
-                <div className="py-4 px-16 bg-purple-50 rounded">
-                  <h3 className="font-semibold">Overall Score</h3>
-                  <p className="text-2xl">0.78</p>
-                  <p className="text-sm text-gray-600">Bullish signal</p>
-                </div>
+      {/* Sentiment Stats */}
+      <div className='flex justify-center justify-items-center gap-4 max-h-screen max-w-full'>
+        <Card>
+          <CardHeader>
+            <CardTitle>Market Sentiment Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="py-4 px-10 bg-green-50 rounded">
+                <h3 className="font-semibold">Social Media Sentiment</h3>
+                <p className="text-2xl">0.82</p>
+                <p className="text-sm text-gray-600">Positive trend</p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+              <div className="py-4 px-10 bg-blue-50 rounded">
+                <h3 className="font-semibold">News Sentiment</h3>
+                <p className="text-2xl">0.75</p>
+                <p className="text-sm text-gray-600">Neutral trend</p>
+              </div>
+              <div className="py-4 px-10 bg-purple-50 rounded">
+                <h3 className="font-semibold">Overall Score</h3>
+                <p className="text-2xl">0.78</p>
+                <p className="text-sm text-gray-600">Bullish signal</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
