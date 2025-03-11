@@ -38,7 +38,7 @@ const Login = () => {
 
 	return (
 	/* Card */
-	<div className="bg-gray-100 p-4 flex w-screen h-screen justify-center items-center">
+	<div className="min-h-screen min-w-screen bg-gray-100 p-4 flex justify-center items-center">
 
 		{/* Login Layout */}
 		<div className="grid grid-cols-1 gap-4 w-fit h-fit">
