@@ -9,15 +9,7 @@ from pydantic import BaseModel
 import uuid
 import time
 import os
-
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-
-class RegisterRequest(BaseModel):
-    username: str
-    password: str
-    signupcode: str
+import requests
 
 app = FastAPI()
 
@@ -55,6 +47,11 @@ db = DatabaseClient()
 async def root():
     return {"message": "Hello World"}
 
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+    signupcode: str
+
 @app.post("/api/register", status_code=status.HTTP_201_CREATED)
 async def request_new_account(request: RegisterRequest):
     if request.signupcode != config.signup_pass:
@@ -66,6 +63,10 @@ async def request_new_account(request: RegisterRequest):
         raise HTTPException(status_code=401, detail="user already exists with that name")
     db.AddUser(request.username, request.password)
     return {"message" : "OK"}
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
 
 @app.post("/api/login", status_code=status.HTTP_200_OK)
 async def login(request: LoginRequest):
@@ -83,12 +84,14 @@ async def login(request: LoginRequest):
         session.refresh(user)
         return {"session" : user.session}
 
+
+
 # Do NOT put API routes after this line!
 app.mount("/static", StaticFiles(directory="frontend/dist", html=True), name="static")
 
 # Serve the React index.html for all other routes
 # For client-side routing
-@app.get("/{full_path:path}")  # Catch all paths
+@app.get("/{full_path:path}", include_in_schema=False)  # Catch all paths
 async def catch_all(full_path: str):
     index_path = "frontend/dist/index.html"
     if os.path.exists(index_path):
