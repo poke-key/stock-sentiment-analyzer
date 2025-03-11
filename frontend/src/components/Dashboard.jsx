@@ -56,10 +56,14 @@ const Dashboard = () => {
                 placeholder="Enter stock symbol..."
                 className="w-64 p-2 border rounded bg-gray-200 text-gray-800"
               />
+              <button className='p-2 px-4 border rounded bg-violet-500 hover:bg-violet-600
+						text-white'>
+                Go
+              </button>
             </div>
             <div className="flex items-center space-x-2 mb-4">
             <Microchip className="text-gray-400 mt-2" />
-            <Dropdown placeholder='Tech Stocks' options={techStockOptions} className='w-64' 
+            <Dropdown placeholder='Tech Stocks' options={techStockOptions} className='w-full' 
                       onChange={handleDropdownChange}/>
                 {/* <button className="w-full p-2 text-left bg-blue-50 rounded hover:bg-blue-100">
                   Energy Sector
