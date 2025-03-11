@@ -28,6 +28,7 @@ const Register = () => {
 		
 			const data = await response.json();
 			// TODO(Darrell): VERIFY VALIDITY HERE (Popup for success?)
+			console.log(data)
 		  } 
 		  catch (error) {
 			console.error("Error:", error);
@@ -47,7 +48,8 @@ const Register = () => {
 				<CardTitle className="text-center">Register</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<form className='flex flex-col space-y-4 items-center'>
+				<form className='flex flex-col space-y-4 items-center'
+					  onSubmit={handleSubmit}>
 					<input
 						type="text"
 						placeholder="Username"
@@ -73,7 +75,7 @@ const Register = () => {
 						value='Register'
 					/>
 					<p className='text-xs'>Already have an account?
-						<a className='px-1'>
+						<a className='px-1' href='/login'>
 							Log In
 						</a>
 					</p>

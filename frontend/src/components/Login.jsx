@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Search, Bell, BookMarked, Settings } from 'lucide-react';
+import { Search, Bell, BookMarked, Settings, Link } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 
 const Login = () => {
@@ -24,6 +24,8 @@ const Login = () => {
 		
 			const data = await response.json();
 			// TODO(Darrell): VERIFY VALIDITY HERE (STORE SESSION TOKEN)
+			console.log(data)
+			sessionStorage.setItem("sesh", data.session)
 		  } 
 		  catch (error) {
 			console.error("Error:", error);
@@ -64,7 +66,7 @@ const Login = () => {
 						value='Login'
 					/>
 					<p className='text-xs'>Don't have an account?
-						<a className='px-1'>
+						<a className='px-1' href='/register'>
 							Register
 						</a>
 					</p>
