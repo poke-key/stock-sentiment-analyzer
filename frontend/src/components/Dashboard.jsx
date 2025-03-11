@@ -10,7 +10,12 @@ const Dashboard = () => {
   const [sentimentData, setSentimentData] = useState([]);
 
   const handleDropdownChange = (selectedOption) => {
-    setSelectedStock(selectedOption.value);
+    if(selectedOption){
+      setSelectedStock(selectedOption.value);
+    }
+    else {
+      setSelectedStock(null)
+    }
   };
   
   // Mock data - replace with actual API calls
