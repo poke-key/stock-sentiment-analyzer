@@ -3,15 +3,21 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
+export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
+  let isDev = command == "serve"
+  let config = {
+    plugins: [react()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
       },
-  },
-  base: "/static",
-    server: {
-      historyApiFallback: true, // Ensures React Router handles unknown routes
-  },
+    },
+    base: "/static",
+  }
+
+  if (isDev){
+    config.base = "/";
+  }
+
+  return config;
 })
