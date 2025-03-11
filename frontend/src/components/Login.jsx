@@ -5,6 +5,31 @@ import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 
 const Login = () => {
 	
+	const [username, setUsername] = useState("");
+  	const [password, setPassword] = useState("");
+
+	const handleSubmit = async (e) => {
+		try {
+			const response = await fetch("http://localhost:8000/api/login", {
+			  method: "POST",
+			  headers: {
+				"Content-Type": "application/json",
+			  },
+			  body: JSON.stringify({ username: username, password: password }),
+			});
+		
+			if (!response.ok) {
+			  throw new Error("Login failed");
+			}
+		
+			const data = await response.json();
+			// TODO(Darrell): VERIFY VALIDITY HERE (STORE SESSION TOKEN)
+		  } 
+		  catch (error) {
+			console.error("Error:", error);
+		  }
+	};
+
 	return (
 	/* Card */
 	<div className="bg-gray-100 p-4 flex w-screen h-screen justify-center items-center">
@@ -18,16 +43,19 @@ const Login = () => {
 				<CardTitle className="text-center">Login</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<form className='flex flex-col space-y-4 items-center'>
+				<form className='flex flex-col space-y-4 items-center'
+					  onSubmit={handleSubmit}>
 					<input
 						type="text"
 						placeholder="Username"
 						className="w-64 p-2 border rounded bg-gray-200"
+						onChange={(e) => setUsername(e.target.value)}
 					/>
 					<input
 						type="password"
 						placeholder="Password"
 						className="w-64 p-2 border rounded bg-gray-200"
+						onChange={(e) => setPassword(e.target.value)}
 					/>
 					<input 
 						type="submit"

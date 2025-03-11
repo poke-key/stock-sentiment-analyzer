@@ -5,6 +5,35 @@ import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 
 const Register = () => {
 	
+	const [username, setUsername] = useState("");
+  	const [password, setPassword] = useState("");
+  	const [registerCode, setRegisterCode] = useState("");
+
+	  const handleSubmit = async (e) => {
+		try {
+			const response = await fetch("http://localhost:8000/api/login", {
+			  method: "POST",
+			  headers: {
+				"Content-Type": "application/json",
+			  },
+			  body: JSON.stringify({ 
+				username: username, 
+				password: password, 
+				signup_pass: registerCode }),
+			});
+		
+			if (!response.ok) {
+			  throw new Error("Login failed");
+			}
+		
+			const data = await response.json();
+			// TODO(Darrell): VERIFY VALIDITY HERE (Popup for success?)
+		  } 
+		  catch (error) {
+			console.error("Error:", error);
+		  }
+	};
+
 	return (
 	/* Card */
 	<div className="bg-gray-100 p-4 flex w-screen h-screen justify-center items-center">
@@ -23,16 +52,19 @@ const Register = () => {
 						type="text"
 						placeholder="Username"
 						className="w-64 p-2 border rounded bg-gray-200"
+						onChange={(e) => setUsername(e.target.value)}
 					/>
 					<input
 						type="password"
 						placeholder="Password"
 						className="w-64 p-2 border rounded bg-gray-200"
+						onChange={(e) => setPassword(e.target.value)}
 					/>
 					<input
 						type="text"
 						placeholder="Register Code"
-						className="w-64 p-2 border rounded bg-gray-200 "
+						className="w-64 p-2 border rounded bg-gray-200"
+						onChange={(e) => setRegisterCode(e.target.value)}
 					/>
 					<input 
 						type="submit"
