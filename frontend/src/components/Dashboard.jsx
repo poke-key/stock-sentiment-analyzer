@@ -7,6 +7,7 @@ import { techStockOptions } from '../data/stocks.jsx'
 
 const Dashboard = () => {
   const [selectedStock, setSelectedStock] = useState(null);
+  const [manualStockInput, setManualStockInput] = useState(null);
   const [sentimentData, setSentimentData] = useState([]);
 
   const handleDropdownChange = (selectedOption) => {
@@ -17,6 +18,18 @@ const Dashboard = () => {
       setSelectedStock(null)
     }
   };
+
+  const manualStockInputChanged = (e) => {
+    setManualStockInput(e.target.value);
+  }
+
+  const onGoButtonClicked = () => {
+    setSelectedStock(manualStockInput);
+  };
+
+  useEffect(() => {
+    console.log("useEffect: selectedStock=" + selectedStock);
+  }, [selectedStock]);
   
   // Mock data - replace with actual API calls
   const mockSentimentData = [
@@ -53,13 +66,15 @@ const Dashboard = () => {
               <Search className="text-gray-400" />
               <input 
                 type="text"
-                placeholder="Enter stock symbol..."
+                placeholder="Enter stock ticker..."
                 className="w-64 p-2 border rounded bg-gray-200 text-gray-800"
+                onChange={manualStockInputChanged}
               />
-              <button className='p-2 px-4 border rounded bg-violet-500 hover:bg-violet-600
-						text-white'>
-                Go
-              </button>
+              <button 
+                className='p-2 px-4 border rounded bg-violet-500 hover:bg-violet-600 text-white'
+                onClick={onGoButtonClicked}>
+                  Go
+                </button>
             </div>
             <div className="flex items-center space-x-2 mb-4">
             <Microchip className="text-gray-400 mt-2" />
