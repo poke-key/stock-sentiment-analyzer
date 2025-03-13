@@ -6,9 +6,12 @@ from starlette.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 from pydantic import BaseModel
+from data import initialize_data
 import uuid
 import time
 import os
+
+initialize_data()
 
 class LoginRequest(BaseModel):
     username: str
