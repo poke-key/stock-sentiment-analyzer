@@ -33,11 +33,11 @@ const Dashboard = () => {
   
   // Mock data - replace with actual API calls
   const mockSentimentData = [
-    { date: '2024-02-01', price: 150.20, sentiment: 0.75 },
-    { date: '2024-02-02', price: 152.50, sentiment: 0.82 },
-    { date: '2024-02-03', price: 151.30, sentiment: 0.68 },
-    { date: '2024-02-04', price: 153.90, sentiment: 0.91 },
-    { date: '2024-02-05', price: 155.20, sentiment: 0.88 }
+    { date: '02-01', price1: 150.20, price2: 140.20, price3: 130.20, sentiment: 0.5 },
+    { date: '02-02', price1: 152.50, price2: 142.50, price3: 131.50, sentiment: 0.2 },
+    { date: '02-03', price1: 151.30, price2: 141.30, price3: 134.30, sentiment: 0.8 },
+    { date: '02-04', price1: 153.90, price2: 143.90, price3: 137.90, sentiment: 0.4 },
+    { date: '02-05', price1: 155.20, price2: 145.20, price3: 132.20, sentiment: 0.7 }
   ];
 
   useEffect(() => {
@@ -101,15 +101,29 @@ const Dashboard = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
                   <YAxis yAxisId="left" />
-                  <YAxis yAxisId="right" orientation="right" />
+                  <YAxis yAxisId="right" orientation="right" domain={[-1, 1]} />
                   <Tooltip />
                   <Legend />
                   <Line 
                     yAxisId="left"
                     type="monotone" 
-                    dataKey="price" 
-                    stroke="#2196F3" 
-                    name="Stock Price"
+                    dataKey="price1" 
+                    stroke="#2196AD" 
+                    name="Stock Price Change1"
+                  />
+                  <Line 
+                    yAxisId="left"
+                    type="monotone" 
+                    dataKey="price2" 
+                    stroke="#2106F7" 
+                    name="Stock Price Change2"
+                  />
+                  <Line 
+                    yAxisId="left"
+                    type="monotone" 
+                    dataKey="price3" 
+                    stroke="#F100F3" 
+                    name="Stock Price Change2"
                   />
                   <Line 
                     yAxisId="right"
