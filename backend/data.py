@@ -1,8 +1,7 @@
 import pandas as pd
 from datetime import datetime
-
-data_stock_price_by_category = [[], [], [], []]
-data_stock_sent_by_category - [[], [], [], []]
+from dataclasses import dataclass, field
+from typing import List
 
 # Frontend vertical slice format 
 # x: date
@@ -15,49 +14,50 @@ data_stock_sent_by_category - [[], [], [], []]
 # AI Software TSLA, META
 # Cybersecurity CRWD, PANW
 
-stock_to_category_map = {
-	"NVDA" : 1,
-	"INTC" : 1,
+stock_data_map = {
+	"NVDA"   : {"col": 2,  "cat": 1},
+	"INTC"   : {"col": 4,  "cat": 1},
 
-	"MSFT" : 2,
-	"AMZN" : 2,
-	"GOOGLE" : 2,
+	"MSFT"   : {"col": 6,  "cat": 2},
+	"AMZN"   : {"col": 8,  "cat": 2},
+	"GOOGLE" : {"col": 10, "cat": 2},
 
-	"TSLA" : 3,
-	"META" : 3,
+	"TSLA"   : {"col": 12, "cat": 3},
+	"META"   : {"col": 14, "cat": 3},
 
-	"CRWD" : 4,
-	"PANW" : 4
+	"CRWD"   : {"col": 16, "cat": 4},
+	"PANW"   : {"col": 18, "cat": 4}
 }
 
-stock_to_col_idx_map = {
-	"NVDA" : 2,
-	"INTC" : 4,
-
-	"MSFT" : 6,
-	"AMZN" : 8,
-	"GOOGLE" : 10,
-
-	"TSLA" : 12,
-	"META" : 14,
-
-	"CRWD" : 16,
-	"PANW" : 18
-}
-
+@dataclass
 class RawSlice:
-	date : Timestamp
-	avg_sentiment: float
-	num_stocks : int
-	stock_prices : []
+	date : pd.Timestamp = None
+	avg_sentiment: float = 0.0
+	num_stocks : int = 0
+	stock_prices : List[float] = field(default_factory=list) # Max 3 stocks per category
+	stock_labels : List[str] = field(default_factory=list)
 
-category_1_slice = {
+def print_slice(e : RawSlice):
+	print("Raw Slice")
+	print("\tnum_stocks: " + str(e.num_stocks))
+	for i in range(0, len(e.stock_prices)):
+		print("\t" + e.stock_labels[i] + ": " + str(e.stock_prices[i]))
 
-}
+raw_slices = [[], [], [], []]
 
-def append_stock_data(category, val):
-	arrayIdx = category - 1
-	data_stock_price_by_category[arrayIdx].append(val)
+def print_category_slices():
+	
+	for slices in raw_slices: # loop category
+		stock_names = slices[0].stock_labels
+		prices = [[], [], []]
+		si = 0
+		for i in range(0, len(slices)): # loop slices in category, build per-stock data
+			s = slices[i]
+			prices[si % s.num_stocks] = s.stock_prices[si]
+			si += 1
+		print("Date: " + str(slices[0].date))
+		for i in range(0, slices[0].num_stocks):
+			print("\t" + stock_names[i] + ": " + str(prices[i]))
 
 def initialize_data():
 	# Read both files
@@ -68,10 +68,8 @@ def initialize_data():
 
 	# Sort stock csv by date
 	# sentinments csv is already sorted correctly
-	print(df_stock) 
 	df_stock['Date'] = pd.to_datetime(df_stock.Date, format = "%m/%d/%Y")
 	df_stock.sort_values(by='Date', ascending = True, inplace = True)
-	print(df_stock) 
 	
 	# Process categories one at a time (stock prices)
 	# stocks csv has less dates, use it as dates validity as well.
@@ -81,8 +79,26 @@ def initialize_data():
 		date_str = row['Date'].strftime("%m-%d-%Y")
 		dates.add(row['Date'])
 
+		new_slice = RawSlice()
+
 		# We need to get a vertical "slice" for every iteration.
-		# For every "change" col
-		#	- get which category col belongs to (based on stock ticker)
-		#	- append change col for stock into category's array for prices
-		
+		last_cat = None
+		slice_array_idx = 0
+		for index, (stock, data) in enumerate(stock_data_map.items(), start=0):
+			category = data['cat']
+			date = row['Date']
+			slice_array_idx = category - 1
+
+			# Save slice and start new one if date is different
+			if (not last_cat and category > 0) or (last_cat and last_cat != category):
+				print("Finished Category: " + str(category))
+				raw_slices[slice_array_idx].append(new_slice)
+				new_slice = RawSlice()
+			last_cat = category
+			
+			new_slice.num_stocks += 1
+			new_slice.stock_prices.append(row.iloc[data['col']])
+			new_slice.stock_labels.append(stock)
+		raw_slices[slice_array_idx].append(new_slice) # Last slice
+
+	print(raw_slices)
