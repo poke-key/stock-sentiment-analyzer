@@ -47,16 +47,18 @@ raw_slices = [[], [], [], []]
 
 def print_category_slices():
 	
-	for slices in raw_slices: # loop category
-		stock_names = slices[0].stock_labels
+	for cat_slices in raw_slices: # loop category
+		stock_names = cat_slices[0].stock_labels
 		prices = [[], [], []]
-		si = 0
-		for i in range(0, len(slices)): # loop slices in category, build per-stock data
-			s = slices[i]
+		
+		# loop individual slices in category, build per-stock prices arrays
+		for i in range(0, len(cat_slices)): 
+			s = cat_slices[i]
 			prices[si % s.num_stocks] = s.stock_prices[si]
 			si += 1
-		print("Date: " + str(slices[0].date))
-		for i in range(0, slices[0].num_stocks):
+
+		print("Date: " + str(cat_slices[0].date))
+		for i in range(0, cat_slices[0].num_stocks):
 			print("\t" + stock_names[i] + ": " + str(prices[i]))
 
 def initialize_data():
@@ -90,8 +92,8 @@ def initialize_data():
 			slice_array_idx = category - 1
 
 			# Save slice and start new one if date is different
-			if (not last_cat and category > 0) or (last_cat and last_cat != category):
-				print("Finished Category: " + str(category))
+			if (not last_cat and category > 1) or (last_cat and last_cat != category):
+				print("arr idx: " + str(slice_array_idx))
 				raw_slices[slice_array_idx].append(new_slice)
 				new_slice = RawSlice()
 			last_cat = category
@@ -99,6 +101,7 @@ def initialize_data():
 			new_slice.num_stocks += 1
 			new_slice.stock_prices.append(row.iloc[data['col']])
 			new_slice.stock_labels.append(stock)
+			
 		raw_slices[slice_array_idx].append(new_slice) # Last slice
 
 	print(raw_slices)
