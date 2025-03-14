@@ -90,11 +90,12 @@ def initialize_data():
 			category = data['cat']
 			date = row['Date']
 			slice_array_idx = category - 1
+			#print("cat: " + str(category) + ", arr_idx: ," + str(slice_array_idx))
 
 			# Save slice and start new one if date is different
 			if (not last_cat and category > 1) or (last_cat and last_cat != category):
-				print("arr idx: " + str(slice_array_idx))
-				raw_slices[slice_array_idx].append(new_slice)
+				#print("new slice: " + str(slice_array_idx))
+				raw_slices[slice_array_idx - 1].append(new_slice)
 				new_slice = RawSlice()
 			last_cat = category
 			
