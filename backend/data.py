@@ -52,13 +52,13 @@ def print_category_slices():
 		prices = [[], [], []]
 		
 		# loop individual slices in category, build per-stock prices arrays
-		for i in range(0, len(cat_slices)): 
-			s = cat_slices[i]
-			prices[si % s.num_stocks] = s.stock_prices[si]
-			si += 1
+		for sliceIdx in range(0, len(cat_slices)): 
+			s = cat_slices[sliceIdx]
+			for j in range(0, len(s.stock_prices)):
+				prices[j % s.num_stocks].append(s.stock_prices[j])
 
-		print("Date: " + str(cat_slices[0].date))
-		for i in range(0, cat_slices[0].num_stocks):
+		print("Date: " + str(cat_slices[0].date) + " -> " + str(cat_slices[len(cat_slices) - 1].date)) 
+		for i in range(0, len(stock_names)):
 			print("\t" + stock_names[i] + ": " + str(prices[i]))
 
 def initialize_data():
@@ -97,6 +97,7 @@ def initialize_data():
 				#print("new slice: " + str(slice_array_idx))
 				raw_slices[slice_array_idx - 1].append(new_slice)
 				new_slice = RawSlice()
+				new_slice.date = date
 			last_cat = category
 			
 			new_slice.num_stocks += 1
@@ -104,5 +105,3 @@ def initialize_data():
 			new_slice.stock_labels.append(stock)
 			
 		raw_slices[slice_array_idx].append(new_slice) # Last slice
-
-	print(raw_slices)
