@@ -7,24 +7,40 @@ import { techStockOptions } from '../data/stocks.jsx'
 
 const Dashboard = () => {
   const [selectedStock, setSelectedStock] = useState(null);
-  const [manualStockInput, setManualStockInput] = useState(null);
   const [sentimentData, setSentimentData] = useState([]);
 
-  const handleDropdownChange = (selectedOption) => {
+  const handleDropdownChange = async (selectedOption) => {
     if(selectedOption){
       setSelectedStock(selectedOption.value);
+
+      // Make request to backend for data based on category number (value)
+      try {
+        const response = await fetch("http://localhost:8000/api/category", {
+          method: "POST",
+          headers: {
+          "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ 
+            username: sessionStorage.getItem("username"), 
+            session: sessionStorage.getItem("session"),
+            category: selectedOption.value }),
+          });
+      
+          if (!response.ok) {
+            throw new Error("Category request failed");
+          }
+        
+          const data = await response.json();
+          console.log(data)
+        } 
+        catch (error) {
+        console.error("Error:", error);
+        }
+      
     }
     else {
       setSelectedStock(null)
     }
-  };
-
-  const manualStockInputChanged = (e) => {
-    setManualStockInput(e.target.value);
-  }
-
-  const onGoButtonClicked = () => {
-    setSelectedStock(manualStockInput);
   };
 
   useEffect(() => {
@@ -64,20 +80,6 @@ const Dashboard = () => {
               <CardTitle>Search Stocks</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center space-x-2 mb-4">
-                <Search className="text-gray-400" />
-                <input 
-                  type="text"
-                  placeholder="Enter stock ticker..."
-                  className="w-full p-2 border rounded bg-gray-200 text-gray-800"
-                  onChange={manualStockInputChanged}
-                />
-                <button 
-                  className='p-2 px-4 border rounded bg-violet-500 hover:bg-violet-600 text-white'
-                  onClick={onGoButtonClicked}>
-                    Go
-                  </button>
-              </div>
               <div className="flex items-center space-x-2 mb-4">
               <Microchip className="text-gray-400 mt-2" />
               <Dropdown placeholder='Tech Stocks' options={techStockOptions} className='w-full shrink' 

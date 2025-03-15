@@ -6,13 +6,12 @@ from starlette.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 from pydantic import BaseModel
-from data import initialize_data, print_category_slices
+from data import initialize_data, get_graph_data
 import uuid
 import time
 import os
 
 initialize_data()
-print_category_slices()
 
 class LoginRequest(BaseModel):
     username: str
@@ -22,6 +21,11 @@ class RegisterRequest(BaseModel):
     username: str
     password: str
     signupcode: str
+
+class CategoryRequest(BaseModel):
+    username: str
+    session: str
+    category: int
 
 app = FastAPI()
 
@@ -86,6 +90,14 @@ async def login(request: LoginRequest):
         session.commit()
         session.refresh(user)
         return {"session" : user.session}
+
+@app.post("/api/category", status_code=status.HTTP_200_OK)
+async def category(request: CategoryRequest):
+    if not db.GetUserSession(request.username, request.session):
+        raise HTTPException(status_code=401, detail="invalid credentials")
+    if request.category < 1 or request.category > 4:
+        raise HTTPException(status_code=402, detail="category must between 1 and 4")
+    return get_graph_data(request.category)
 
 # Do NOT put API routes after this line!
 app.mount("/static", StaticFiles(directory="frontend/dist", html=True), name="static")

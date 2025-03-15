@@ -45,6 +45,9 @@ def print_slice(e : RawSlice):
 
 raw_slices = [[], [], [], []]
 
+def get_graph_data(category:int):
+	return raw_slices[category - 1]
+
 def print_category_slices():
 	
 	for cat_slices in raw_slices: # loop category
@@ -117,9 +120,12 @@ def initialize_data():
 	for idx, row in df_sent.iterrows():
 		date = row['date']
 		avg_sentiment = row['avg_normalized_sentiment']
-		
+
 		for slices in raw_slices:
 			for s in slices:
 				if date == s.date:
 					s.avg_sentiment = avg_sentiment
-			
+	# Process all slices per-category into a string of json
+	for catIdx in range(0, len(raw_slices)):
+		category_slices = raw_slices[catIdx]
+		

@@ -32,6 +32,16 @@ class DatabaseClient:
 			user = session.exec(statement).first()
 			return user
 
+	def GetUserSession(self, username, in_session):
+		with Session(engine) as session:
+			user = self.GetUser(username)
+			if not user:
+				return False
+			if user.session != uuid.UUID(in_session):
+				return False
+			else:
+				return True
+
 	# Simply updates lastTime, TTL for session is 10 minutes
 	def UpdateUserSession(self, username):
 		with Session(engine) as session:
