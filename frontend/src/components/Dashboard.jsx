@@ -7,6 +7,7 @@ import { techStockOptions } from '../data/stocks.jsx'
 
 const Dashboard = () => {
   const [selectedStock, setSelectedStock] = useState(null);
+  const [stockNames, setStockNames] = useState([]);
   const [sentimentData, setSentimentData] = useState([]);
 
   const [numStocks, setNumStocks] = useState(0);
@@ -37,6 +38,7 @@ const Dashboard = () => {
 
           // Format responseData here for graph
           let graphData = [];
+          let stockNames = [];
           let numStocks = 0;
           for (let i = 0; i < responseData.length; i++) {
             let responseSlice = responseData[i];
@@ -54,14 +56,35 @@ const Dashboard = () => {
               // No time, needed string format, whatever.
               if (j == 0) {
                 newSlice['price1'] = stockPrices[j];
+                
+                if(j > stockLabels.length){
+                  stockNames.push(stockLabels[j]);
+                }
+                else {
+                  stockNames[j] = stockLabels[j];
+                }
               }
 
               if (j == 1) {
                 newSlice['price2'] = stockPrices[j];
+
+                if(j > stockLabels.length){
+                  stockNames.push(stockLabels[j]);
+                }
+                else {
+                  stockNames[j] = stockLabels[j];
+                }
               }
 
               if (j == 2) {
                 newSlice['price3'] = stockPrices[j];
+
+                if(j > stockLabels.length){
+                  stockNames.push(stockLabels[j]);
+                }
+                else {
+                  stockNames[j] = stockLabels[j];
+                }
               }
             }
 
@@ -69,6 +92,7 @@ const Dashboard = () => {
           }
 
           setNumStocks(numStocks);
+          setStockNames(stockNames);
           setSentimentData(graphData);
         } 
         catch (error) {
@@ -149,14 +173,14 @@ const Dashboard = () => {
                     type="monotone" 
                     dataKey="price1" 
                     stroke="#2106F3" 
-                    name="Stock Price1"
+                    name={stockNames[0]}
                   />
                   <Line 
                     yAxisId="left"
                     type="monotone" 
                     dataKey="price2" 
                     stroke="#2196F3" 
-                    name="Stock Price2"
+                    name={stockNames[1]}
                   />
                   { numStocks > 2 && 
                     <Line 
@@ -164,7 +188,7 @@ const Dashboard = () => {
                       type="monotone" 
                       dataKey="price3" 
                       stroke="#1126F3" 
-                      name="Stock Price3"
+                      name={stockNames[2]}
                     />
                   }
                   <Line 
