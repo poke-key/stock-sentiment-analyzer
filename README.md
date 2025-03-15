@@ -6,6 +6,7 @@
 ## Requirements
 - Python
 - Web Browser
+- NPM
 - Postgres DB (free)
 - Internet Connectivity
 
