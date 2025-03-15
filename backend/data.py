@@ -57,7 +57,11 @@ def print_category_slices():
 			for j in range(0, len(s.stock_prices)):
 				prices[j % s.num_stocks].append(s.stock_prices[j])
 
-		print("Date: " + str(cat_slices[0].date) + " -> " + str(cat_slices[len(cat_slices) - 1].date)) 
+		# print("Category Date, Sentiments")
+		# for s in cat_slices:
+		# 	print(str(s.date) + ", " + str(s.avg_sentiment))
+
+		print("Sentiment: " + str(cat_slices[0].avg_sentiment))
 		for i in range(0, len(stock_names)):
 			print("\t" + stock_names[i] + ": " + str(prices[i]))
 
@@ -71,6 +75,7 @@ def initialize_data():
 	# Sort stock csv by date
 	# sentinments csv is already sorted correctly
 	df_stock['Date'] = pd.to_datetime(df_stock.Date, format = "%m/%d/%Y")
+	df_sent['date'] = pd.to_datetime(df_sent.date, format = "%m/%d/%Y")
 	df_stock.sort_values(by='Date', ascending = True, inplace = True)
 	
 	# Process categories one at a time (stock prices)
@@ -90,6 +95,8 @@ def initialize_data():
 			category = data['cat']
 			date = row['Date']
 			slice_array_idx = category - 1
+			if not new_slice.date:
+				new_slice.date = date
 			#print("cat: " + str(category) + ", arr_idx: ," + str(slice_array_idx))
 
 			# Save slice and start new one if date is different
@@ -105,3 +112,14 @@ def initialize_data():
 			new_slice.stock_labels.append(stock)
 			
 		raw_slices[slice_array_idx].append(new_slice) # Last slice
+
+	# Get sentiment score
+	for idx, row in df_sent.iterrows():
+		date = row['date']
+		avg_sentiment = row['avg_normalized_sentiment']
+		
+		for slices in raw_slices:
+			for s in slices:
+				if date == s.date:
+					s.avg_sentiment = avg_sentiment
+			
