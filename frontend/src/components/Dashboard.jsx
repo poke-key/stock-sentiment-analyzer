@@ -37,9 +37,10 @@ const Dashboard = () => {
 
           // Format responseData here for graph
           let graphData = [];
+          let numStocks = 0;
           for (let i = 0; i < responseData.length; i++) {
             let responseSlice = responseData[i];
-            let numStocks = responseSlice["num_stocks"];
+            numStocks = responseSlice["num_stocks"];
             let stockPrices = responseSlice["stock_prices"];
             let stockLabels = responseSlice["stock_labels"];
             let newSlice = {};
@@ -67,6 +68,7 @@ const Dashboard = () => {
             graphData.push(newSlice);
           }
 
+          setNumStocks(numStocks);
           setSentimentData(graphData);
         } 
         catch (error) {
@@ -156,6 +158,15 @@ const Dashboard = () => {
                     stroke="#2196F3" 
                     name="Stock Price2"
                   />
+                  { numStocks > 2 && 
+                    <Line 
+                      yAxisId="left"
+                      type="monotone" 
+                      dataKey="price3" 
+                      stroke="#1126F3" 
+                      name="Stock Price3"
+                    />
+                  }
                   <Line 
                     yAxisId="right"
                     type="monotone" 
