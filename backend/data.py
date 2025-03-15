@@ -31,7 +31,7 @@ stock_data_map = {
 
 @dataclass
 class RawSlice:
-	date : pd.Timestamp = None
+	date : str = None
 	avg_sentiment: float = 0.0
 	num_stocks : int = 0
 	stock_prices : List[float] = field(default_factory=list) # Max 3 stocks per category
@@ -99,7 +99,7 @@ def initialize_data():
 			date = row['Date']
 			slice_array_idx = category - 1
 			if not new_slice.date:
-				new_slice.date = date
+				new_slice.date = date.strftime("%m-%d-%Y")
 			#print("cat: " + str(category) + ", arr_idx: ," + str(slice_array_idx))
 
 			# Save slice and start new one if date is different
@@ -107,7 +107,7 @@ def initialize_data():
 				#print("new slice: " + str(slice_array_idx))
 				raw_slices[slice_array_idx - 1].append(new_slice)
 				new_slice = RawSlice()
-				new_slice.date = date
+				new_slice.date = date.strftime("%m-%d-%Y")
 			last_cat = category
 			
 			new_slice.num_stocks += 1
@@ -118,7 +118,7 @@ def initialize_data():
 
 	# Get sentiment score
 	for idx, row in df_sent.iterrows():
-		date = row['date']
+		date = row['date'].strftime("%m-%d-%Y")
 		avg_sentiment = row['avg_normalized_sentiment']
 
 		for slices in raw_slices:

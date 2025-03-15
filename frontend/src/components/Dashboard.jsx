@@ -9,6 +9,8 @@ const Dashboard = () => {
   const [selectedStock, setSelectedStock] = useState(null);
   const [sentimentData, setSentimentData] = useState([]);
 
+  const [numStocks, setNumStocks] = useState(0);
+
   const handleDropdownChange = async (selectedOption) => {
     if(selectedOption){
       setSelectedStock(selectedOption.value);
@@ -30,8 +32,30 @@ const Dashboard = () => {
             throw new Error("Category request failed");
           }
         
-          const data = await response.json();
-          console.log(data)
+          const responseData = await response.json();
+          console.log(responseData)
+
+          // Format responseData here for graph
+          let graphData = [];
+          for (let i = 0; i < responseData.length; i++) {
+            let responseSlice = responseData[i];
+            let numStocks = responseSlice["num_stocks"];
+            let stockPrices = responseSlice["stock_prices"];
+            let stockLabels = responseSlice["stock_labels"];
+            let newSlice = {};
+
+            newSlice["date"] = responseSlice["date"];
+            newSlice["sentiment"] = responseSlice["avg_sentiment"];
+
+            // Transform keys for stock prices and names into our data.
+            for(let j = 0; j < numStocks; ++j){
+              newSlice['price${j+1}'] = stockPrices[j];
+            }
+
+            graphData.push(newSlice);
+          }
+
+          setSentimentData(graphData);
         } 
         catch (error) {
         console.error("Error:", error);
@@ -109,15 +133,23 @@ const Dashboard = () => {
                   <Line 
                     yAxisId="left"
                     type="monotone" 
-                    dataKey="price" 
+                    dataKey="price1" 
+                    stroke="#2106F3" 
+                    name="Stock Price1"
+                  />
+                  <Line 
+                    yAxisId="left"
+                    type="monotone" 
+                    dataKey="price2" 
                     stroke="#2196F3" 
-                    name="Stock Price"
+                    name="Stock Price2"
                   />
                   <Line 
                     yAxisId="right"
                     type="monotone" 
                     dataKey="sentiment" 
-                    stroke="#4CAF50" 
+                    stroke="#4CAF50"
+                    strokeDasharray="4"
                     name="Sentiment Score"
                   />
                 </LineChart>
