@@ -26,8 +26,6 @@ const Login = () => {
 			}
 		
 			const data = await response.json();
-			// TODO(Darrell): VERIFY VALIDITY HERE (STORE SESSION TOKEN)
-			console.log(data)
 			sessionStorage.setItem("username", username)
 			sessionStorage.setItem("session", data.session)
 			navigate("/dashboard")

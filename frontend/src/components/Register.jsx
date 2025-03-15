@@ -30,8 +30,6 @@ const Register = () => {
 			}
 		
 			const data = await response.json();
-			// TODO(Darrell): VERIFY VALIDITY HERE (Popup for success?)
-			console.log(data)
 			alert("Registration Successfull!\nYou can log in now!")
 			navigate("/login")
 		  } 

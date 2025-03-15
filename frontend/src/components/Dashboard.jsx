@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Label, Legend, ResponsiveContainer } from 'recharts';
 import { Search, Bell, BookMarked, Settings, Microchip } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card";
 import Dropdown from './ui/dropdown.jsx';
@@ -34,7 +34,6 @@ const Dashboard = () => {
           }
         
           const responseData = await response.json();
-          console.log(responseData)
 
           // Format responseData here for graph
           let graphData = [];
@@ -108,20 +107,6 @@ const Dashboard = () => {
   useEffect(() => {
     console.log("useEffect: selectedStock=" + selectedStock);
   }, [selectedStock]);
-  
-  // Mock data - replace with actual API calls
-  const mockSentimentData = [
-    { date: '2024-02-01', price: 150.20, sentiment: 0.75 },
-    { date: '2024-02-02', price: 152.50, sentiment: 0.82 },
-    { date: '2024-02-03', price: 151.30, sentiment: 0.68 },
-    { date: '2024-02-04', price: 153.90, sentiment: 0.91 },
-    { date: '2024-02-05', price: 155.20, sentiment: 0.88 }
-  ];
-
-  useEffect(() => {
-    // Simulate data fetching
-    setSentimentData(mockSentimentData);
-  }, [selectedStock]);
 
   return (
     <div className="min-h-screen min-w-screen w-screen bg-gray-100 flex flex-col gap-4">
@@ -146,9 +131,6 @@ const Dashboard = () => {
               <Microchip className="text-gray-400 mt-2" />
               <Dropdown placeholder='Tech Stocks' options={techStockOptions} className='w-full shrink' 
                         onChange={handleDropdownChange}/>
-                  {/* <button className="w-full p-2 text-left bg-blue-50 rounded hover:bg-blue-100">
-                    Energy Sector
-                  </button> */}
               </div>
               
             </CardContent>
@@ -164,8 +146,22 @@ const Dashboard = () => {
                 <LineChart data={sentimentData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
-                  <YAxis yAxisId="left" />
-                  <YAxis yAxisId="right" orientation="right" />
+                  <YAxis yAxisId="left">
+                    <Label 
+                      angle={-90} 
+                      value='% Change' 
+                      position='insideLeft' 
+                      style={{textAnchor: 'middle'}} 
+                    />
+                  </YAxis>
+                  <YAxis yAxisId="right" orientation="right" >
+                    <Label 
+                      angle={-90} 
+                      value='Sentiment' 
+                      position='insideRight' 
+                      style={{textAnchor: 'middle'}} 
+                    />
+                  </YAxis>
                   <Tooltip />
                   <Legend />
                   <Line 
