@@ -49,7 +49,19 @@ const Dashboard = () => {
 
             // Transform keys for stock prices and names into our data.
             for(let j = 0; j < numStocks; ++j){
-              newSlice['price${j+1}'] = stockPrices[j];
+              
+              // No time, needed string format, whatever.
+              if (j == 0) {
+                newSlice['price1'] = stockPrices[j];
+              }
+
+              if (j == 1) {
+                newSlice['price2'] = stockPrices[j];
+              }
+
+              if (j == 2) {
+                newSlice['price3'] = stockPrices[j];
+              }
             }
 
             graphData.push(newSlice);
